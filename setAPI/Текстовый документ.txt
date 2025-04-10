@@ -1,0 +1,58 @@
+CREATE DATABASE IF NOT EXISTS win10croassantdb CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE win10croassantdb;
+
+CREATE TABLE Products (
+    ProductId INT AUTO_INCREMENT PRIMARY KEY,
+    ProductName VARCHAR(100) NOT NULL,
+    Category VARCHAR(50) NOT NULL,
+    Price DECIMAL(10, 2) NOT NULL,
+    Cost DECIMAL(10, 2) NOT NULL,
+    Description TEXT,
+    Seasonal BOOLEAN NOT NULL,
+    Active BOOLEAN NOT NULL,
+    IntroducedDate DATE NOT NULL,
+    Ingredients TEXT
+);
+
+CREATE TABLE Customers (
+    CustomerId INT AUTO_INCREMENT PRIMARY KEY,
+    FirstName VARCHAR(50) NOT NULL,
+    LastName VARCHAR(50) NOT NULL,
+    Age INT,
+    Gender ENUM('M', 'F', 'O'),
+    PostalCode VARCHAR(10),
+    Email VARCHAR(100) UNIQUE,
+    PhoneNumber VARCHAR(20),
+    MembershipStatus VARCHAR(20) NOT NULL DEFAULT 'Basic',
+    JoinDate DATE,
+    LastPurchaseDate DATE,
+    TotalSpending DECIMAL(10, 2) NOT NULL DEFAULT 0,
+    AverageOrderValue DECIMAL(10, 2),
+    Frequency VARCHAR(50),
+    PreferredCategory VARCHAR(50),
+    Churned BOOLEAN
+);
+
+CREATE TABLE Orders (
+    TransactionId INT AUTO_INCREMENT PRIMARY KEY,
+    CustomerId INT NOT NULL,
+    OrderDate DATETIME NOT NULL,
+    TotalAmount DECIMAL(10, 2) NOT NULL,
+    Status VARCHAR(20) NOT NULL DEFAULT 'Pending',
+    PaymentMethod VARCHAR(50) NOT NULL,
+    Channel VARCHAR(20) NOT NULL,
+    StoreId INT,
+    PromotionId INT,
+    DiscountAmount DECIMAL(10, 2),
+    FOREIGN KEY (CustomerId) REFERENCES Customers(CustomerId)
+);
+
+CREATE TABLE OrderItems (
+    OrderItemId INT AUTO_INCREMENT PRIMARY KEY,
+    TransactionId INT NOT NULL,
+    ProductId INT NOT NULL,
+    Quantity INT NOT NULL,
+    Price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (TransactionId) REFERENCES Orders(TransactionId),
+    FOREIGN KEY (ProductId) REFERENCES Products(ProductId)
+);
