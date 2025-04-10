@@ -1,14 +1,15 @@
 from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
-import timedelta
-import func
+from datetime import datetime, timedelta
+from sqlalchemy import func
+from flasgger import Swagger, swag_from
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:password@localhost/win10croassantdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+swagger = Swagger(app)
 
 class Product(db.Model):
     __tablename__ = 'Products'
@@ -62,6 +63,13 @@ class OrderItem(db.Model):
     ProductId = db.Column(db.Integer, db.ForeignKey('Products.ProductId'), nullable=False)
     Quantity = db.Column(db.Integer, nullable=False)
     Price = db.Column(db.Float, nullable=False)
+
+class Inventory(db.Model):
+    __tablename__ = 'inventory'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    quantity = db.Column(db.Float, nullable=False)
+    unit = db.Column(db.String(20), nullable=False)
 
 @app.route('/api/products', methods=['GET'])
 def get_products():
@@ -428,15 +436,13 @@ def delete_orderitem(iid):
 
 @app.route("/api/inventory", methods=["GET"])
 def get_inventory():
-    conn = get_db_connection()
-    cur = conn.cursor()
-    cur.execute("SELECT name, quantity, unit FROM inventory;")
-    rows = cur.fetchall()
-    cur.close()
-    conn.close()
-
-    inventory = [{"name": r[0], "quantity": r[1], "unit": r[2]} for r in rows]
-    return jsonify(inventory)
+    data = Inventory.query.all()
+    inventory = [{
+        "name": i.name,
+        "quantity": i.quantity,
+        "unit": i.unit
+    } for i in data]
+    return jsonify(inventory), 200
 
 @app.route('/api/sales-stats', methods=['GET'])
 def get_sales_stats():

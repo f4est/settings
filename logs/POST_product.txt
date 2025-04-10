@@ -1,0 +1,7 @@
+Status: 201
+Body: {
+  "id": 7,
+  "name": "Brownie",
+  "price": 4.75,
+  "stock": 15
+}

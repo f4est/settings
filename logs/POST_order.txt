@@ -1,0 +1,7 @@
+Status: 201
+Body: {
+  "id": 6,
+  "product_id": 1,
+  "quantity": 2,
+  "total_price": 5.0
+}

@@ -1,0 +1,7 @@
+Status: 200
+Body: {
+  "id": 3,
+  "name": "Pain au Chocolat",
+  "price": 2.75,
+  "stock": 40
+}
