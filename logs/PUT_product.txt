@@ -1,7 +1,0 @@
-Status: 200
-Body: {
-  "id": 2,
-  "name": "Updated Baguette",
-  "price": 3.5,
-  "stock": 25
-}

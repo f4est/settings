@@ -1,7 +1,0 @@
-Status: 200
-Body: {
-  "id": 3,
-  "product_id": 3,
-  "quantity": 2,
-  "total_price": 39.98
-}
